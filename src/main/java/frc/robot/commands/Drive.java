@@ -18,16 +18,21 @@ public class Drive extends CommandBase {
     driveTrain = DT;
     forwardAxis = f_Axis;
     turnAxis = t_axis;
+
+    addRequirements(driveTrain);
   }
 
 // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    driveTrain.resetEncoders();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     driveTrain.drive(forwardAxis.getAsDouble(), turnAxis.getAsDouble());
+    driveTrain.update();
   }
 
   // Called once the command ends or is interrupted.

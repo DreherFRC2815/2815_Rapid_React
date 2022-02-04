@@ -19,15 +19,13 @@ public final class Constants {
     // robot constants
     public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(6) * Math.PI;
     public static final double GEAR_BOX_RATIO = 10.71;
-    public static final double PULSE_PER_REVOLUTION = 256;
-    public static final double DISTANCE_PER_PULSE = (GEAR_BOX_RATIO * WHEEL_CIRCUMFERENCE)/PULSE_PER_REVOLUTION;
-
-    public static final double POSITION_CONVERSION_FACTOR = (GEAR_BOX_RATIO * WHEEL_CIRCUMFERENCE)/42;
+    // Encoder position at 1 revloution or 0.4788 meters
+    public static final double ELLIOT_COEFFICIENT = 5/4;
 
     // controller Gains
-    public static final double kP = 20.114;
+    public static final double kP = 9.6238;
     public static final double kI = 0;
-    public static final double kD = 1557.9;
+    public static final double kD = 0;
     public static final double kS = 0;
     public static final double kV = 0;
     public static final double kA = 0;
