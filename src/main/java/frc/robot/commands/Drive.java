@@ -26,6 +26,7 @@ public class Drive extends CommandBase {
   @Override
   public void initialize() {
     driveTrain.resetEncoders();
+    driveTrain.resetGyro();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

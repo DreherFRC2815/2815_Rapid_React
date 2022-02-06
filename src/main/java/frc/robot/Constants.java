@@ -23,9 +23,9 @@ public final class Constants {
     public static final double ELLIOT_COEFFICIENT = 5/4;
 
     // controller Gains
-    public static final double kP = 9.6238;
+    public static final double kP = 1.8777;
     public static final double kI = 0;
-    public static final double kD = 0;
+    public static final double kD = 0.14398;
     public static final double kS = 0;
     public static final double kV = 0;
     public static final double kA = 0;

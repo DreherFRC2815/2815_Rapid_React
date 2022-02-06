@@ -30,8 +30,10 @@ public class DriveTrain extends SubsystemBase {
     ADXRS450_Gyro gyro;
     
     double setpoint;
+    double angle;
     double leftEncoderPosition;
     double rightEncoderPosition;
+    double desiredAngle;
 
     public DriveTrain() {
         leftLeader = new CANSparkMax(1, MotorType.kBrushless);
@@ -49,11 +51,10 @@ public class DriveTrain extends SubsystemBase {
         drive = new DifferentialDrive(leftLeader, rightLeader);
 
         gyro = new ADXRS450_Gyro();
+        gyro.calibrate();
 
         leftFollower.follow(leftLeader);
         rightFollower.follow(rightLeader);
-        gyro.reset();
-        gyro.calibrate();
         leftController.setP(Constants.kP);
         leftController.setI(Constants.kI);
         leftController.setD(Constants.kD);
@@ -76,30 +77,41 @@ public class DriveTrain extends SubsystemBase {
         drive.arcadeDrive(f, t);
         SmartDashboard.putNumber("leftEncoder", leftEncoder.getPosition());
         SmartDashboard.putNumber("rightEncoder", rightEncoder.getPosition());
+        SmartDashboard.putNumber("angle", gyro.getAngle());
     }
 
-    public void drivePID(double s) {
+    public void setSetpoint(double s) {
         setpoint = s * (Constants.GEAR_BOX_RATIO / Constants.WHEEL_CIRCUMFERENCE) * Constants.ELLIOT_COEFFICIENT;  // MAKE SURE TO CONVERT FROM METERS TO ROTATIONS BEFORE MULTIPLYING BY THIS COEFFICIENT 1 ROTATION = THE COEFFICIENT
+    }
+
+    public void drivePID() {
         leftController.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         rightController.setReference(-setpoint, CANSparkMax.ControlType.kPosition);
 
-        SmartDashboard.putNumber("leftEncoder", leftEncoder.getPosition());
-        SmartDashboard.putNumber("rightEncoder", rightEncoder.getPosition());
+        SmartDashboard.putNumber("leftEncoder", Math.abs(leftEncoder.getPosition()));
+        SmartDashboard.putNumber("rightEncoder", Math.abs(rightEncoder.getPosition()));
+        SmartDashboard.putNumber("angle", Math.abs(getAngle() % 360));
     }
 
     public double getAngle() {
-        return gyro.getAngle();
+        return Math.abs(gyro.getAngle() % 360);
     }
 
-    public boolean angleCorrect(double angle) {
-        if (gyro.getAngle() < angle) {
-            while (gyro.getAngle() != angle) {
-                drive.arcadeDrive(0, 0.5);
+    public boolean angleCorrect() {
+        if (getAngle() < desiredAngle) {
+            while (getAngle() <= desiredAngle) {
+                // drive.arcadeDrive(0, 0.25);
+                drive.arcadeDrive(0.25, 0);
+                angle = gyro.getAngle();
+                SmartDashboard.putNumber("angle", gyro.getAngle());
             }
             return true;
-        } else if (gyro.getAngle() > angle) {
-            while (gyro.getAngle() != angle) {
-                drive.arcadeDrive(0, -0.5);
+        } else if (getAngle() > desiredAngle) {
+            while (getAngle() >= desiredAngle) {
+                drive.arcadeDrive(-0.25, 0);
+                // drive.arcadeDrive(0, -0.25);
+                angle = gyro.getAngle();
+                SmartDashboard.putNumber("angle", gyro.getAngle());
             }
             return true;
         }
@@ -127,6 +139,7 @@ public class DriveTrain extends SubsystemBase {
     public double getleftVelocity() {
         return leftEncoder.getVelocity();
     }
+
     public double getRightVelocity() {
         return rightEncoder.getVelocity();
     }
@@ -135,32 +148,29 @@ public class DriveTrain extends SubsystemBase {
         return (getleftVelocity() + getRightVelocity()) / 2;
     }
 
-    public boolean atSetpointA() {
-        double left = leftEncoder.getPosition();
-        double right = rightEncoder.getPosition();
-
-        if (left == setpoint && right == setpoint) {
-            if (Math.abs(left-right) <= 0.1) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean atSetpointB() {
-        double left = Math.abs(leftEncoder.getPosition());
-        double right = Math.abs(rightEncoder.getPosition());
-
-        if (((left == Math.abs(setpoint + 2)) || (left == Math.abs(setpoint - 2))) &&
-            ((right == Math.abs(setpoint + 2)) || (right == Math.abs(setpoint - 2)))) {
-
-                return true;
+    public boolean atSetpoint() {
+        if ((setpoint - 2) <= leftEncoder.getPosition()) {
+            System.out.print("yay");
+            return true;
         }
         return false;
     }
 
     public void update() {
-        leftEncoderPosition = leftEncoder.getPosition();
-        rightEncoderPosition = rightEncoder.getPosition();
+        leftEncoderPosition = Math.abs(leftEncoder.getPosition());
+        rightEncoderPosition = Math.abs(rightEncoder.getPosition());
+        angle = gyro.getAngle();
+        SmartDashboard.updateValues();
+    }
+
+    public boolean atAngle() {
+        if (getAngle() == desiredAngle) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setAngle(double a) {
+        desiredAngle = a;
     }
 }

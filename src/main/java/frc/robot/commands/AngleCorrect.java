@@ -18,14 +18,15 @@ public class AngleCorrect extends CommandBase {
     @Override
     public void initialize() {
         driveTrain.resetGyro();
+        driveTrain.setAngle(180);
     }
 
     @Override
     public void execute() {
-        driveTrain.angleCorrect(angle);
-        if (driveTrain.getAngle() == angle) {
+        if (driveTrain.atAngle()) {
             finished = true;
         }
+        driveTrain.update();
     }
     @Override
     public void end(boolean interrupted) {}
