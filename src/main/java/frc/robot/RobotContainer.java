@@ -6,7 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Autos.TarmacPosition1.Position1;
+// import frc.robot.Autos.TarmacPosition1.Position1;
+import frc.robot.Autos.TarmacPosition2.Position2;
 import frc.robot.commands.Drive;
 import frc.robot.subsystems.DriveTrain;
 /**
@@ -43,6 +44,6 @@ public class RobotContainer {
   
 
   public Command getAutonomousCommand() {
-    return new Position1(driveTrain);
+    return new Position2(driveTrain);
   }
 }

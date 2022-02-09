@@ -94,33 +94,33 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public double getAngle() {
-        return Math.abs(gyro.getAngle() % 360);
+        return gyro.getAngle() % 360;
     }
 
     public boolean angleCorrect() {
         if (getAngle() < desiredAngle) {
-            while (getAngle() <= desiredAngle) {
-                // drive.arcadeDrive(0, 0.25);
+            while (getAngle() < desiredAngle) {
                 drive.arcadeDrive(0.25, 0);
+                // drive.arcadeDrive(0, 0.25);
                 angle = gyro.getAngle();
                 SmartDashboard.putNumber("angle", gyro.getAngle());
             }
-            return true;
-        } else if (getAngle() > desiredAngle) {
-            while (getAngle() >= desiredAngle) {
+        }
+        
+        else if (getAngle() > desiredAngle) {
+            while (getAngle() > desiredAngle) {
                 drive.arcadeDrive(-0.25, 0);
                 // drive.arcadeDrive(0, -0.25);
                 angle = gyro.getAngle();
                 SmartDashboard.putNumber("angle", gyro.getAngle());
             }
-            return true;
         }
+        System.out.print("\n\ndone\n\n");
         return true;
     }
 
     public void resetGyro() {
         gyro.reset();
-        gyro.calibrate();
     }
 
     public boolean leftAtSetpoint() {
@@ -136,6 +136,7 @@ public class DriveTrain extends SubsystemBase {
         }
         return false;
     }
+
     public double getleftVelocity() {
         return leftEncoder.getVelocity();
     }
@@ -149,8 +150,8 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        if ((setpoint - 2) <= leftEncoder.getPosition()) {
-            System.out.print("yay");
+        if (setpoint <= leftEncoder.getPosition()) {
+            System.out.print("\n\nyay\n\n");
             return true;
         }
         return false;
@@ -164,7 +165,8 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public boolean atAngle() {
-        if (getAngle() == desiredAngle) {
+        if (getAngle() >= desiredAngle) {
+            System.out.println("done");
             return true;
         }
         return false;
