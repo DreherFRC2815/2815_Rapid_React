@@ -77,7 +77,6 @@ public class DriveTrain extends SubsystemBase {
         drive.arcadeDrive(f, t);
         SmartDashboard.putNumber("leftEncoder", leftEncoder.getPosition());
         SmartDashboard.putNumber("rightEncoder", rightEncoder.getPosition());
-        SmartDashboard.putNumber("angle", gyro.getAngle());
     }
 
     public void setSetpoint(double s) {
@@ -90,33 +89,39 @@ public class DriveTrain extends SubsystemBase {
 
         SmartDashboard.putNumber("leftEncoder", Math.abs(leftEncoder.getPosition()));
         SmartDashboard.putNumber("rightEncoder", Math.abs(rightEncoder.getPosition()));
-        SmartDashboard.putNumber("angle", Math.abs(getAngle() % 360));
     }
 
-    public double getAngle() {
-        return gyro.getAngle() % 360;
-    }
-
-    public boolean angleCorrect() {
-        if (getAngle() < desiredAngle) {
-            while (getAngle() < desiredAngle) {
-                drive.arcadeDrive(0.25, 0);
-                // drive.arcadeDrive(0, 0.25);
-                angle = gyro.getAngle();
-                SmartDashboard.putNumber("angle", gyro.getAngle());
-            }
+    public boolean rotate() {
+        double currentAngle = gyro.getAngle();
+        double finalAngle = angle + desiredAngle;
+        SmartDashboard.putNumber("final angle", finalAngle);
+        SmartDashboard.putNumber("current angle", gyro.getAngle());
+        if (Math.abs(currentAngle) >= Math.abs(finalAngle)) {
+            drive.arcadeDrive(0, 0);
+            return true;
         }
+        //     if (finalAngle < 0) {
+        //     if (gyro.getAngle() <= finalAngle) {
+        //         drive.arcadeDrive(0, 0);
+        //         return true;
+        //     }
+        // }
         
-        else if (getAngle() > desiredAngle) {
-            while (getAngle() > desiredAngle) {
-                drive.arcadeDrive(-0.25, 0);
-                // drive.arcadeDrive(0, -0.25);
-                angle = gyro.getAngle();
-                SmartDashboard.putNumber("angle", gyro.getAngle());
-            }
+        // if (finalAngle > 0) {
+        //     if (gyro.getAngle() >= finalAngle) {
+        //         drive.arcadeDrive(0, 0);
+        //         return true;
+        //     }
+        // }
+
+        if (finalAngle < 0) {
+            drive.arcadeDrive(-0.25, 0);
         }
-        System.out.print("\n\ndone\n\n");
-        return true;
+
+        if (finalAngle > 0) {
+            drive.arcadeDrive(0.25, 0);
+        }
+        return false;
     }
 
     public void resetGyro() {
@@ -160,16 +165,7 @@ public class DriveTrain extends SubsystemBase {
     public void update() {
         leftEncoderPosition = Math.abs(leftEncoder.getPosition());
         rightEncoderPosition = Math.abs(rightEncoder.getPosition());
-        angle = gyro.getAngle();
         SmartDashboard.updateValues();
-    }
-
-    public boolean atAngle() {
-        if (getAngle() >= desiredAngle) {
-            System.out.println("done");
-            return true;
-        }
-        return false;
     }
 
     public void setAngle(double a) {
