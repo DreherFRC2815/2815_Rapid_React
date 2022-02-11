@@ -20,13 +20,12 @@ public class AngleCorrect extends CommandBase {
         driveTrain.resetGyro();
         driveTrain.resetEncoders();
         driveTrain.setAngle(angle);
-        driveTrain.angleCorrect();
     }
 
     @Override
     public void execute() {
-        if (driveTrain.atAngle()) {
-            finished = true;
+        if (!finished) {
+            finished = driveTrain.rotate();
         }
         driveTrain.update();
     }

@@ -12,7 +12,7 @@ public class Position2 extends SequentialCommandGroup {
         addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(50)));
         addCommands(new AngleCorrect(driveTrain, -113.5));
         addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(87)));
-        addCommands(new AngleCorrect(driveTrain, -90));
-        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(83)));
+        addCommands(new AngleCorrect(driveTrain, -120));
+        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(90)));
     }
 }
