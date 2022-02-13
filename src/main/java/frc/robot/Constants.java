@@ -21,6 +21,7 @@ public final class Constants {
     public static final double GEAR_BOX_RATIO = 10.71;
     // Encoder position at 1 revloution or 0.4788 meters
     public static final double ELLIOT_COEFFICIENT = 5/4;
+    public static final double TICKS_PER_ROTATION = 360/40;
 
     // controller Gains
     public static final double kP = 1.8777;

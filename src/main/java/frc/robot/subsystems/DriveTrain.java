@@ -5,6 +5,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,6 +29,7 @@ public class DriveTrain extends SubsystemBase {
     DifferentialDrive drive;
 
     ADXRS450_Gyro gyro;
+    PIDController rotationController;
     
     double setpoint;
     double angle;
@@ -52,6 +54,7 @@ public class DriveTrain extends SubsystemBase {
 
         gyro = new ADXRS450_Gyro();
         gyro.calibrate();
+        rotationController = new PIDController(0.012, 0, 0);
 
         leftFollower.follow(leftLeader);
         rightFollower.follow(rightLeader);
@@ -62,8 +65,8 @@ public class DriveTrain extends SubsystemBase {
         rightController.setI(Constants.kI);
         rightController.setD(Constants.kD);
 
-        leftController.setOutputRange(-0.25, 0.25);
-        rightController.setOutputRange(-0.25, 0.25);
+        // leftController.setOutputRange(-0.25, 0.25);
+        // rightController.setOutputRange(-0.25, 0.25);
 
         drive.setSafetyEnabled(false);
     }
@@ -100,19 +103,26 @@ public class DriveTrain extends SubsystemBase {
             drive.arcadeDrive(0, 0);
             return true;
         }
-        //     if (finalAngle < 0) {
-        //     if (gyro.getAngle() <= finalAngle) {
-        //         drive.arcadeDrive(0, 0);
-        //         return true;
-        //     }
-        // }
-        
-        // if (finalAngle > 0) {
-        //     if (gyro.getAngle() >= finalAngle) {
-        //         drive.arcadeDrive(0, 0);
-        //         return true;
-        //     }
-        // }
+
+        if (finalAngle < 0) {
+            drive.arcadeDrive(-0.5, 0);
+        }
+
+        if (finalAngle > 0) {
+            drive.arcadeDrive(0.5, 0);
+        }
+        return false;
+    }
+
+    public boolean rotateSlow() {
+        double currentAngle = gyro.getAngle();
+        double finalAngle = angle + desiredAngle;
+        SmartDashboard.putNumber("final angle", finalAngle);
+        SmartDashboard.putNumber("current angle", gyro.getAngle());
+        if (Math.abs(currentAngle) >= Math.abs(finalAngle)) {
+            drive.arcadeDrive(0, 0);
+            return true;
+        }
 
         if (finalAngle < 0) {
             drive.arcadeDrive(-0.25, 0);
@@ -155,7 +165,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        if (setpoint <= leftEncoder.getPosition()) {
+        if (Math.abs(setpoint) <= Math.abs(leftEncoder.getPosition())) {
             System.out.print("\n\nyay\n\n");
             return true;
         }

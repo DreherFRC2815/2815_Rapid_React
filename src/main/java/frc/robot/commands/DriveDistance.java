@@ -27,6 +27,7 @@ public class DriveDistance extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        driveTrain.setAngle(0);
         if (driveTrain.atSetpoint()) {
             finished = true;
         } else {
@@ -43,6 +44,11 @@ public class DriveDistance extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
+        if (finished) {
+            driveTrain.rotateSlow();
+            driveTrain.resetEncoders();
+            driveTrain.resetGyro();
+        }
         return finished;
     }
 }
