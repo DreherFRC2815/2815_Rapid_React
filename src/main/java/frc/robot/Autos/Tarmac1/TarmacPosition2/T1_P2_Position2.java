@@ -19,6 +19,7 @@ public class T1_P2_Position2 extends SequentialCommandGroup {
         addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(50)));
         addCommands(new AngleCorrect(driveTrain, 180));
         addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(75)));
-        addCommands(new AngleCorrect(driveTrain, 45));
+        addCommands(new AngleCorrect(driveTrain, -45));
+        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(12)));
     }
 }

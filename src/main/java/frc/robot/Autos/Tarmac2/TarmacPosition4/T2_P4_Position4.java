@@ -9,10 +9,10 @@ import frc.robot.subsystems.DriveTrain;
 public class T2_P4_Position4 extends SequentialCommandGroup {
     
     public T2_P4_Position4(DriveTrain driveTrain) {
-        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(53)));
-        addCommands(new AngleCorrect(driveTrain, 90));
+        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(60)));
+        addCommands(new AngleCorrect(driveTrain, -90));
         addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(40)));
-        addCommands(new AngleCorrect(driveTrain, 90));
-        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(70)));
+        addCommands(new AngleCorrect(driveTrain, -90));
+        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(80)));
     }
 }

@@ -65,8 +65,8 @@ public class DriveTrain extends SubsystemBase {
         rightController.setI(Constants.kI);
         rightController.setD(Constants.kD);
 
-        // leftController.setOutputRange(-0.25, 0.25);
-        // rightController.setOutputRange(-0.25, 0.25);
+        leftController.setOutputRange(-0.5, 0.5);
+        rightController.setOutputRange(-0.5, 0.5);
 
         drive.setSafetyEnabled(false);
     }

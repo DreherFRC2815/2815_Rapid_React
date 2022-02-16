@@ -25,7 +25,7 @@ public class AngleCorrect extends CommandBase {
     @Override
     public void execute() {
         if (!finished) {
-            finished = driveTrain.rotate();
+            finished = driveTrain.rotateSlow();
         }
         driveTrain.update();
     }

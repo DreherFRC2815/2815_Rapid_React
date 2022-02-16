@@ -9,6 +9,6 @@ public class T2_PC_NoExtra extends SequentialCommandGroup {
     
     public T2_PC_NoExtra(DriveTrain driveTrain) {
         addCommands(/* unload */);
-        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(120)));
+        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(100)));
     }
 }

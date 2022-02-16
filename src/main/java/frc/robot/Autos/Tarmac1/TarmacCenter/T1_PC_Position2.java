@@ -10,11 +10,11 @@ public class T1_PC_Position2 extends SequentialCommandGroup {
 
     public T1_PC_Position2(DriveTrain driveTrain) {
         addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(5)));
-        addCommands(new AngleCorrect(driveTrain, 40));
-        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(88)));
+        addCommands(new AngleCorrect(driveTrain, 45));
+        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(95)));
         addCommands(new AngleCorrect(driveTrain, 180));
-        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(88)));
-        addCommands(new AngleCorrect(driveTrain, -40));
+        addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(95)));
+        addCommands(new AngleCorrect(driveTrain, -45));
         addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(5)));
     }
 }
