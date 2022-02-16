@@ -6,8 +6,19 @@ package frc.robot;
 
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Autos.TarmacPosition1.Position1_2;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Autos.Tarmac1.TarmacCenter.T1_PC_Position1;
+import frc.robot.Autos.Tarmac1.TarmacCenter.T1_PC_Position1_2;
+import frc.robot.Autos.Tarmac1.TarmacCenter.T1_PC_Position2;
+import frc.robot.Autos.Tarmac1.TarmacPosition1.T1_P1_Position1_2;
+import frc.robot.Autos.Tarmac1.TarmacPosition2.T1_P2_Position2;
+import frc.robot.Autos.Tarmac1.TarmacPosition2.T1_P2_Position2_1;
+import frc.robot.Autos.Tarmac2.TarmacCenter.T2_PC_NoExtra;
+import frc.robot.Autos.Tarmac2.TarmacPosition3.T2_P3_Position3;
+import frc.robot.Autos.Tarmac2.TarmacPosition3.T2_P3_Position4;
+import frc.robot.Autos.Tarmac2.TarmacPosition4.T2_P4_Position4;
 import frc.robot.commands.Drive;
 import frc.robot.subsystems.DriveTrain;
 /**
@@ -22,8 +33,25 @@ public class RobotContainer {
 
   Drive drive;
 
+  SendableChooser<SequentialCommandGroup> autoChooser;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    autoChooser = new SendableChooser<>();
+
+    autoChooser.addOption("T1_PC_Position1_2", new T1_PC_Position1_2(driveTrain));
+    autoChooser.addOption("T1_PC_Position1", new T1_PC_Position1(driveTrain));
+    autoChooser.addOption("T1_PC_Position2", new T1_PC_Position2(driveTrain));
+    autoChooser.addOption("T1_P1_Position1_2", new T1_P1_Position1_2(driveTrain));
+    autoChooser.addOption("T1_P1_Position1", new T1_PC_Position1(driveTrain));
+    autoChooser.addOption("T1_P2_Position2_1", new T1_P2_Position2_1(driveTrain));
+    autoChooser.addOption("T1_P2_Position2", new T1_P2_Position2(driveTrain));
+    autoChooser.addOption("T2_PC_NoExtra", new T2_PC_NoExtra(driveTrain));
+    autoChooser.addOption("T2_P3_Position3", new T2_P3_Position3(driveTrain));
+    autoChooser.addOption("T2_P3_Position4", new T2_P3_Position4(driveTrain));
+    autoChooser.addOption("T2_P4_Position4", new T2_P4_Position4(driveTrain));
+    autoChooser.setDefaultOption("Default(P4_NoExtra)", new T2_PC_NoExtra(driveTrain));
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -41,9 +69,8 @@ public class RobotContainer {
 
     driveTrain.setDefaultCommand(drive);
   }
-  
 
   public Command getAutonomousCommand() {
-    return new Position1_2(driveTrain);
+    return autoChooser.getSelected();
   }
 }
