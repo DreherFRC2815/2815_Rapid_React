@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Autos.Test;
 import frc.robot.Autos.Tarmac1.TarmacCenter.T1_PC_Position1;
 import frc.robot.Autos.Tarmac1.TarmacCenter.T1_PC_Position1_2;
 import frc.robot.Autos.Tarmac1.TarmacCenter.T1_PC_Position2;
@@ -39,8 +40,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    SmartDashboard.putNumber("Rotational P", Constants.r_kP);
+    SmartDashboard.putNumber("Rotational I", Constants.r_kI);
+    SmartDashboard.putNumber("Rotational D", Constants.r_kD);
+
     autoChooser = new SendableChooser<>();
-    SmartDashboard.putData(autoChooser);
     autoChooser.addOption("T1_PC_Position1_2", new T1_PC_Position1_2(driveTrain));
     autoChooser.addOption("T1_PC_Position1", new T1_PC_Position1(driveTrain));
     autoChooser.addOption("T1_PC_Position2", new T1_PC_Position2(driveTrain));
@@ -52,7 +56,11 @@ public class RobotContainer {
     autoChooser.addOption("T2_P3_Position3", new T2_P3_Position3(driveTrain));
     autoChooser.addOption("T2_P3_Position4", new T2_P3_Position4(driveTrain));
     autoChooser.addOption("T2_P4_Position4", new T2_P4_Position4(driveTrain));
-    autoChooser.setDefaultOption("Default(P4_NoExtra)", new T2_PC_NoExtra(driveTrain));
+    autoChooser.setDefaultOption("Test", new Test(driveTrain));
+
+    SmartDashboard.putData(autoChooser);
+
+
 
     // Configure the button bindings
     configureButtonBindings();
@@ -75,4 +83,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
+
 }

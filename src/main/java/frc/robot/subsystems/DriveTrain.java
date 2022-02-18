@@ -29,13 +29,18 @@ public class DriveTrain extends SubsystemBase {
     DifferentialDrive drive;
 
     ADXRS450_Gyro gyro;
-    PIDController rotationController;
+    PIDController gyroController;
     
     double setpoint;
     double angle;
     double leftEncoderPosition;
     double rightEncoderPosition;
     double desiredAngle;
+    double angleSetpoint;
+
+    double kP;
+    double kI;
+    double kD;
 
     public DriveTrain() {
         leftLeader = new CANSparkMax(1, MotorType.kBrushless);
@@ -54,7 +59,7 @@ public class DriveTrain extends SubsystemBase {
 
         gyro = new ADXRS450_Gyro();
         gyro.calibrate();
-        rotationController = new PIDController(0.012, 0, 0);
+        gyroController = new PIDController(0, 0, 0);
 
         leftFollower.follow(leftLeader);
         rightFollower.follow(rightLeader);
@@ -92,6 +97,32 @@ public class DriveTrain extends SubsystemBase {
 
         SmartDashboard.putNumber("leftEncoder", Math.abs(leftEncoder.getPosition()));
         SmartDashboard.putNumber("rightEncoder", Math.abs(rightEncoder.getPosition()));
+    }
+
+    public boolean rotatePID() {
+        double kP = SmartDashboard.getNumber("Rotational P", 0);
+        double kI = SmartDashboard.getNumber("Rotational I", 0);
+        double kD = SmartDashboard.getNumber("Rotational D", 0);
+        double currentAngle = gyro.getAngle();
+        double finalAngle = angle + desiredAngle;
+        SmartDashboard.putNumber("final Angle", finalAngle);
+        SmartDashboard.putNumber("current Angle", currentAngle);
+
+        gyroController.setPID(kP, kI, kD);
+
+        if (Math.abs(currentAngle) >= Math.abs(finalAngle)) {
+            drive.arcadeDrive(0, 0);
+            return true;
+        }
+
+        if (finalAngle < 0) {
+            drive.arcadeDrive(-gyroController.calculate(currentAngle, finalAngle), 0);
+        }
+
+        if (finalAngle > 0) {
+            drive.arcadeDrive(gyroController.calculate(currentAngle, finalAngle), 0);
+        }
+        return false;
     }
 
     public boolean rotate() {
@@ -180,5 +211,13 @@ public class DriveTrain extends SubsystemBase {
 
     public void setAngle(double a) {
         desiredAngle = a;
+    }
+
+    public void setCurrentHedding() {
+        angle = gyro.getAngle();
+    }
+
+    public void setRotationalPID(double kP, double kI, double kD) {
+        gyroController.setPID(kP, kI, kD);
     }
 }

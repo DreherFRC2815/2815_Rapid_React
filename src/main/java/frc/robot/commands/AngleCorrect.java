@@ -17,24 +17,29 @@ public class AngleCorrect extends CommandBase {
 
     @Override
     public void initialize() {
-        driveTrain.resetGyro();
-        driveTrain.resetEncoders();
+        reset();
         driveTrain.setAngle(angle);
     }
 
     @Override
     public void execute() {
-        if (!finished) {
-            finished = driveTrain.rotateSlow();
-        }
+        finished = driveTrain.rotatePID();
         driveTrain.update();
     }
     @Override
     public void end(boolean interrupted) {
+        finished = false;
+        reset();
     }
 
     @Override
     public boolean isFinished() {
         return finished;
+    }
+
+    private void reset() {
+        driveTrain.resetGyro();
+        driveTrain.resetEncoders();
+        driveTrain.setCurrentHedding();
     }
 }

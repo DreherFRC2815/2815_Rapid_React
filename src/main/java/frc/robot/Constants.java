@@ -27,9 +27,9 @@ public final class Constants {
     public static final double kP = 1.8777;
     public static final double kI = 0;
     public static final double kD = 0.14398;
-    public static final double kS = 0;
-    public static final double kV = 0;
-    public static final double kA = 0;
+    public static final double r_kP = 0.0125;
+    public static final double r_kI = 0;
+    public static final double r_kD = 0;
 
     // limelight constants (inches, degrees)
     public static final double targetHeight = 0;
