@@ -100,9 +100,9 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public boolean rotatePID() {
-        double kP = SmartDashboard.getNumber("Rotational P", 0);
-        double kI = SmartDashboard.getNumber("Rotational I", 0);
-        double kD = SmartDashboard.getNumber("Rotational D", 0);
+        kP = SmartDashboard.getNumber("Rotational P", Constants.r_kP);
+        kI = SmartDashboard.getNumber("Rotational I", Constants.r_kI);
+        kD = SmartDashboard.getNumber("Rotational D", Constants.r_kD);
         double currentAngle = gyro.getAngle();
         double finalAngle = angle + desiredAngle;
         SmartDashboard.putNumber("final Angle", finalAngle);
@@ -110,17 +110,22 @@ public class DriveTrain extends SubsystemBase {
 
         gyroController.setPID(kP, kI, kD);
 
-        if (Math.abs(currentAngle) >= Math.abs(finalAngle)) {
-            drive.arcadeDrive(0, 0);
-            return true;
-        }
-
         if (finalAngle < 0) {
-            drive.arcadeDrive(-gyroController.calculate(currentAngle, finalAngle), 0);
+            if (currentAngle <= finalAngle) {
+                drive.arcadeDrive(0, 0);
+                return true;
+            }
+            drive.arcadeDrive(gyroController.calculate(currentAngle, finalAngle), 0);
+            // drive.arcadeDrive(0, -gyroController.calculate(currentAngle, finalAngle));
         }
 
         if (finalAngle > 0) {
+            if (currentAngle >= finalAngle) {
+                drive.arcadeDrive(0, 0);
+                return true;
+            }
             drive.arcadeDrive(gyroController.calculate(currentAngle, finalAngle), 0);
+            // drive.arcadeDrive(0, gyroController.calculate(currentAngle, finalAngle));
         }
         return false;
     }
@@ -128,8 +133,8 @@ public class DriveTrain extends SubsystemBase {
     public boolean rotate() {
         double currentAngle = gyro.getAngle();
         double finalAngle = angle + desiredAngle;
-        SmartDashboard.putNumber("final angle", finalAngle);
-        SmartDashboard.putNumber("current angle", gyro.getAngle());
+        SmartDashboard.putNumber("Final angle", finalAngle);
+        SmartDashboard.putNumber("Current angle", gyro.getAngle());
         if (Math.abs(currentAngle) >= Math.abs(finalAngle)) {
             drive.arcadeDrive(0, 0);
             return true;
