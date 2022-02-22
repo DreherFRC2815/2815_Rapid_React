@@ -24,9 +24,14 @@ public final class Constants {
     public static final double TICKS_PER_ROTATION = 360/40;
 
     // controller Gains
+    public static final double kS = 0.20407;
+    public static final double kV = 2.8133;
+    public static final double kA = 0.44351;
+
     public static final double kP = 1.8777;
     public static final double kI = 0;
     public static final double kD = 0.14398;
+
     public static final double r_kP = 0.0125;
     public static final double r_kI = 0;
     public static final double r_kD = 0;
@@ -39,5 +44,4 @@ public final class Constants {
 
     // trajectory constants
     public static final double TRACK_WIDTH = 0;
-
 }

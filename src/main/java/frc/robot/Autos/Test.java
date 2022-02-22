@@ -7,6 +7,6 @@ import frc.robot.subsystems.DriveTrain;
 public class Test extends SequentialCommandGroup {
     
     public Test(DriveTrain driveTrain) {
-        addCommands(new AngleCorrect(driveTrain, -90));
+        addCommands(new AngleCorrect(driveTrain, 90));
     }
 }

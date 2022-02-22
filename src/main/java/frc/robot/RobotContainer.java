@@ -22,7 +22,10 @@ import frc.robot.Autos.Tarmac2.TarmacCenter.T2_PC_NoExtra;
 import frc.robot.Autos.Tarmac2.TarmacPosition3.T2_P3_Position3;
 import frc.robot.Autos.Tarmac2.TarmacPosition3.T2_P3_Position4;
 import frc.robot.Autos.Tarmac2.TarmacPosition4.T2_P4_Position4;
+import frc.robot.commands.Climb;
 import frc.robot.commands.Drive;
+import frc.robot.commands.Index;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,11 +33,16 @@ import frc.robot.subsystems.DriveTrain;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
+import frc.robot.subsystems.Indexer;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   DriveTrain driveTrain = new DriveTrain();
+  Indexer indexer = new Indexer();
+  Climber climber = new Climber();
 
   Drive drive;
+  Index index;
+  Climb climb;
 
   SendableChooser<SequentialCommandGroup> autoChooser;
 
@@ -76,8 +84,12 @@ public class RobotContainer {
     XboxController controller = new XboxController(0);
 
     drive = new Drive(driveTrain, () -> controller.getRightX(), () -> controller.getLeftY());
+    index = new Index(indexer, () -> controller.getAButton(), () -> controller.getBButton(), () -> controller.getXButton(), () -> controller.getYButton());
+    climb = new Climb(climber, () -> controller.getLeftBumper(), () -> controller.getRightBumper());
 
     driveTrain.setDefaultCommand(drive);
+    indexer.setDefaultCommand(index);
+    climber.setDefaultCommand(climb);
   }
 
   public Command getAutonomousCommand() {
