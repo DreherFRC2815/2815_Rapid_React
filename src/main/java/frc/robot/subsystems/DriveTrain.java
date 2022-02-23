@@ -120,7 +120,7 @@ public class DriveTrain extends SubsystemBase {
                 drive.arcadeDrive(0, 0);
                 return true;
             }
-            drive.arcadeDrive(gyroController.calculate(currentAngle, finalAngle) + feedforward.calculate(gyro.getRate(), 4), 0);
+            drive.arcadeDrive(gyroController.calculate(currentAngle, finalAngle) + feedforward.calculate(Math.PI, 2), 0);
             // drive.arcadeDrive(0, -gyroController.calculate(currentAngle, finalAngle));
         }
 
@@ -129,7 +129,7 @@ public class DriveTrain extends SubsystemBase {
                 drive.arcadeDrive(0, 0);
                 return true; 
             }
-            drive.arcadeDrive(gyroController.calculate(currentAngle, finalAngle) + feedforward.calculate(gyro.getRate(), 4), 0);
+            drive.arcadeDrive(gyroController.calculate(currentAngle, finalAngle) + feedforward.calculate(Math.PI, 2), 0);
             // drive.arcadeDrive(0, gyroController.calculate(currentAngle, finalAngle));
         }
         return false;
