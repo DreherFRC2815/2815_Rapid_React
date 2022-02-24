@@ -5,12 +5,16 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Indexer extends SubsystemBase {
     CANSparkMax indexer;
     CANSparkMax lifterLeader;
     CANSparkMax lifterfollower; // possibly unnecessary
+
+    DigitalInput topLimit = new DigitalInput(0);
+    DigitalInput bottomLimit = new DigitalInput(1);
     
     RelativeEncoder indexerEncoder;
     RelativeEncoder lifterLeaderEncoder;
@@ -35,13 +39,13 @@ public class Indexer extends SubsystemBase {
     public void intake() {
         indexer.set(1);
     }
-    
-    public void off() {
-        indexer.set(0);
-    }
 
     public void outtake() {
         indexer.set(-1);
+    }
+    
+    public void off() {
+        indexer.set(0);
     }
 
     public void liftUp() {
@@ -50,5 +54,26 @@ public class Indexer extends SubsystemBase {
 
     public void liftDown() {
         lifterLeader.set(-1);
+    }
+
+    public boolean checkUpperLimit() {
+        if (topLimit.get()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkLowerLimit() {
+        if (bottomLimit.get()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkLimits() {
+        if (checkLowerLimit() || checkUpperLimit()) {
+            return true;
+        }
+        return false;
     }
 }
