@@ -22,7 +22,7 @@ public class AutoDump extends CommandBase {
     @Override
     public void initialize() {
         timer.start();
-        indexer.outtake();
+        indexer.outtake(0.75);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class AutoDump extends CommandBase {
         if (timer.get() >= seconds) {
             finished = true;
         }
-        indexer.outtake();
+        indexer.outtake(0.75);
     }
 
     @Override

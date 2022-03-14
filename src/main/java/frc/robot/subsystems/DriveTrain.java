@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -51,11 +52,17 @@ public class DriveTrain extends SubsystemBase {
         leftFollower = new CANSparkMax(2, MotorType.kBrushless);
         rightFollower = new CANSparkMax(4, MotorType.kBrushless);
 
+        leftLeader.setIdleMode(IdleMode.kBrake);
+        rightLeader.setIdleMode(IdleMode.kBrake);
+
         leftEncoder = leftLeader.getEncoder();
         rightEncoder = rightLeader.getEncoder();
 
         leftController = leftLeader.getPIDController();
         rightController = rightLeader.getPIDController();
+
+        rightLeader.setInverted(true);
+        leftLeader.setInverted(false);
 
         drive = new DifferentialDrive(leftLeader, rightLeader);
 
@@ -66,15 +73,15 @@ public class DriveTrain extends SubsystemBase {
 
         leftFollower.follow(leftLeader);
         rightFollower.follow(rightLeader);
-        leftController.setP(Constants.kP);
-        leftController.setI(Constants.kI);
-        leftController.setD(Constants.kD);
-        rightController.setP(Constants.kP);
-        rightController.setI(Constants.kI);
-        rightController.setD(Constants.kD);
+        leftController.setP(Constants.kP_P);
+        leftController.setI(Constants.kI_P);
+        leftController.setD(Constants.kD_P);
+        rightController.setP(Constants.kP_P);
+        rightController.setI(Constants.kI_P);
+        rightController.setD(Constants.kD_P);
 
-        leftController.setOutputRange(-0.5, 0.5);
-        rightController.setOutputRange(-0.5, 0.5);
+        leftController.setOutputRange(-0.4, 0.4);
+        rightController.setOutputRange(-0.4, 0.4);
 
         drive.setSafetyEnabled(false);
     }
@@ -86,7 +93,7 @@ public class DriveTrain extends SubsystemBase {
 
     public void drive(double f, double t) {
         // drive.arcadeDrive(t, f);
-        drive.arcadeDrive(f, t);
+        drive.arcadeDrive(-f, t);
         SmartDashboard.putNumber("leftEncoder", leftEncoder.getPosition());
         SmartDashboard.putNumber("rightEncoder", rightEncoder.getPosition());
     }
@@ -97,8 +104,9 @@ public class DriveTrain extends SubsystemBase {
 
     public void drivePID() {
         leftController.setReference(setpoint, CANSparkMax.ControlType.kPosition);
-        rightController.setReference(-setpoint, CANSparkMax.ControlType.kPosition);
-
+        rightController.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+    
+        SmartDashboard.putNumber("setpoint", setpoint);
         SmartDashboard.putNumber("leftEncoder", Math.abs(leftEncoder.getPosition()));
         SmartDashboard.putNumber("rightEncoder", Math.abs(rightEncoder.getPosition()));
     }
@@ -207,7 +215,6 @@ public class DriveTrain extends SubsystemBase {
 
     public boolean atSetpoint() {
         if (Math.abs(setpoint) <= Math.abs(leftEncoder.getPosition())) {
-            System.out.print("\n\nyay\n\n");
             return true;
         }
         return false;

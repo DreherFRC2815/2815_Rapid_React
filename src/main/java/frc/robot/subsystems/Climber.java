@@ -10,7 +10,7 @@ public class Climber extends SubsystemBase {
     CANSparkMax climber;
 
     public Climber() {
-        climber = new CANSparkMax(8, MotorType.kBrushless);
+        climber = new CANSparkMax(7, MotorType.kBrushless);
         climber.setIdleMode(IdleMode.kBrake);
     }
 

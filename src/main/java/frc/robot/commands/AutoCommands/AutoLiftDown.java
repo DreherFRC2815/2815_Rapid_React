@@ -1,29 +1,26 @@
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.IndexerLifter;
 
 public class AutoLiftDown extends CommandBase {
-    Indexer indexer;
+    IndexerLifter indexerLifter;
     boolean finished;
     
-    public AutoLiftDown(Indexer i) {
-        indexer = i;
+    public AutoLiftDown(IndexerLifter i) {
+        indexerLifter = i;
 
-        addRequirements(indexer);
+        addRequirements(indexerLifter);
     }
 
     @Override
     public void initialize() {
-
+        indexerLifter.liftDown();
     }
 
     @Override
     public void execute() {
-        if (indexer.checkLowerLimit()) {
-            finished = true;
-        }
-        indexer.liftDown();
+        finished = indexerLifter.checkLowerLimit();
     }
 
     @Override

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -19,6 +20,8 @@ public final class Constants {
     // robot constants
     public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(6) * Math.PI;
     public static final double GEAR_BOX_RATIO = 10.71;
+    public static final double DEFAULTINDEXERSPEED = 0.5;
+
     // Encoder position at 1 revloution or 0.4788 meters
     public static final double ELLIOT_COEFFICIENT = 5/4;
     public static final double TICKS_PER_ROTATION = 360/40;
@@ -28,9 +31,13 @@ public final class Constants {
     public static final double kV = 2.8133;
     public static final double kA = 0.44351;
 
-    public static final double kP = 1.8777;
-    public static final double kI = 0;
-    public static final double kD = 0.14398;
+    public static final double kP_P = 1.8777;
+    public static final double kI_P = 0;
+    public static final double kD_P = 0.14398;
+
+    public static final double kP_V = 0;
+    public static final double kI_V = 0;
+    public static final double kD_V = 0;
 
     public static final double r_kP = 0.0125;
     public static final double r_kI = 0;
@@ -44,4 +51,11 @@ public final class Constants {
 
     // trajectory constants
     public static final double TRACK_WIDTH = 0;
+    public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
+        new DifferentialDriveKinematics(TRACK_WIDTH);
+    public static final double MAX_SPEED = 3;
+    public static final double MAX_ACCELERATION = 3;
+
+    public static final double ramseteB = 2;
+    public static final double ramseteZeta = 0.7;
 }

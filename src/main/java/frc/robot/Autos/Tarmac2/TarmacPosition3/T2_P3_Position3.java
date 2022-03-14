@@ -11,19 +11,20 @@ import frc.robot.commands.AutoCommands.AutoLiftUp;
 import frc.robot.commands.AutoCommands.DriveDistance;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.IndexerLifter;
 
 public class T2_P3_Position3 extends SequentialCommandGroup {
     
-    public T2_P3_Position3(DriveTrain driveTrain, Indexer indexer) {
+    public T2_P3_Position3(DriveTrain driveTrain, Indexer indexer, IndexerLifter indexerLifter) {
         addCommands(new ParallelCommandGroup(
             new DriveDistance(driveTrain, Units.inchesToMeters(75)),
-            new AutoLiftDown(indexer),
+            new AutoLiftDown(indexerLifter),
             new AutoIndex(indexer, 5)
         ));
         addCommands(new AngleCorrect(driveTrain, 180));
         addCommands(new ParallelCommandGroup(
             new DriveDistance(driveTrain, Units.inchesToMeters(110)),
-            new AutoLiftUp(indexer)
+            new AutoLiftUp(indexerLifter)
         ));
         addCommands(new AngleCorrect(driveTrain, 75));
         addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(20)));

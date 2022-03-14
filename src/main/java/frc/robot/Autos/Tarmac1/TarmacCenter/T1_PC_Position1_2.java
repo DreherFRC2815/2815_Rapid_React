@@ -11,15 +11,16 @@ import frc.robot.commands.AutoCommands.AutoLiftUp;
 import frc.robot.commands.AutoCommands.DriveDistance;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.IndexerLifter;
 
 public class T1_PC_Position1_2 extends SequentialCommandGroup {
     
-    public T1_PC_Position1_2(DriveTrain driveTrain, Indexer indexer) {
+    public T1_PC_Position1_2(DriveTrain driveTrain, Indexer indexer, IndexerLifter indexerLifter) {
         addCommands(new AutoDump(indexer, 0.5));
         addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(-5)));
         addCommands(new ParallelCommandGroup(
             new AngleCorrect(driveTrain, 180), // change to 165 after testing if turning -15 degrees later on is redundant.
-            new AutoLiftDown(indexer)
+            new AutoLiftDown(indexerLifter)
         ));
         addCommands(new AngleCorrect(driveTrain, -15));
         addCommands(new ParallelCommandGroup(
@@ -33,7 +34,7 @@ public class T1_PC_Position1_2 extends SequentialCommandGroup {
         ));
         addCommands(new ParallelCommandGroup(
             new AngleCorrect(driveTrain, 115),
-            new AutoLiftUp(indexer)
+            new AutoLiftUp(indexerLifter)
         ));
         addCommands(new DriveDistance(driveTrain, Units.inchesToMeters(120)));
         addCommands(new AutoDump(indexer, 0.5));

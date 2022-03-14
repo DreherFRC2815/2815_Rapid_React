@@ -23,7 +23,7 @@ public class AngleCorrect extends CommandBase {
 
     @Override
     public void execute() {
-        finished = driveTrain.rotatePID();
+        finished = driveTrain.rotateSlow();
         driveTrain.update();
     }
     @Override
