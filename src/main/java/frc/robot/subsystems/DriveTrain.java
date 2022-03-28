@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,6 +30,7 @@ public class DriveTrain extends SubsystemBase {
     SparkMaxPIDController rightController;
 
     DifferentialDrive drive;
+    DifferentialDriveOdometry odometry;
 
     ADXRS450_Gyro gyro;
     SimpleMotorFeedforward feedforward;
@@ -69,26 +71,23 @@ public class DriveTrain extends SubsystemBase {
         gyro = new ADXRS450_Gyro();
         gyro.calibrate();
         gyroController = new PIDController(0, 0, 0);
-        feedforward = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
+        // feedforward = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
+        odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
+
 
         leftFollower.follow(leftLeader);
         rightFollower.follow(rightLeader);
-        leftController.setP(Constants.kP_P);
-        leftController.setI(Constants.kI_P);
-        leftController.setD(Constants.kD_P);
-        rightController.setP(Constants.kP_P);
-        rightController.setI(Constants.kI_P);
-        rightController.setD(Constants.kD_P);
+        // leftController.setP(Constants.kP_P);
+        // leftController.setI(Constants.kI_P);
+        // leftController.setD(Constants.kD_P);
+        // rightController.setP(Constants.kP_P);
+        // rightController.setI(Constants.kI_P);
+        // rightController.setD(Constants.kD_P);
 
         leftController.setOutputRange(-0.4, 0.4);
         rightController.setOutputRange(-0.4, 0.4);
 
         drive.setSafetyEnabled(false);
-    }
-
-    public void resetEncoders() {
-        leftEncoder.setPosition(0);
-        rightEncoder.setPosition(0);
     }
 
     public void drive(double f, double t) {
@@ -112,9 +111,9 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public boolean rotatePID() {
-        kP = SmartDashboard.getNumber("Rotational P", Constants.r_kP);
-        kI = SmartDashboard.getNumber("Rotational I", Constants.r_kI);
-        kD = SmartDashboard.getNumber("Rotational D", Constants.r_kD);
+        // kP = SmartDashboard.getNumber("Rotational P", Constants.r_kP);
+        // kI = SmartDashboard.getNumber("Rotational I", Constants.r_kI);
+        // kD = SmartDashboard.getNumber("Rotational D", Constants.r_kD);
         double currentAngle = gyro.getAngle();
         double finalAngle = angle + desiredAngle;
         SmartDashboard.putNumber("final angle", finalAngle);
@@ -218,6 +217,11 @@ public class DriveTrain extends SubsystemBase {
             return true;
         }
         return false;
+    }
+
+    public void resetEncoders() {
+        leftEncoder.setPosition(0);
+        rightEncoder.setPosition(0);
     }
 
     public void update() {

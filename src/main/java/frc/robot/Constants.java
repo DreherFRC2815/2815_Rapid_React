@@ -27,9 +27,9 @@ public final class Constants {
     public static final double TICKS_PER_ROTATION = 360/40;
 
     // controller Gains
-    public static final double kS = 0.20407;
-    public static final double kV = 2.8133;
-    public static final double kA = 0.44351;
+    public static final double kS = 0.22353;
+    public static final double kV = 2.8021;
+    public static final double kA = 0.66259;
 
     public static final double kP_P = 1.8777;
     public static final double kI_P = 0;
@@ -50,7 +50,7 @@ public final class Constants {
     public static final double limelightAngleFromFloorPerpendicular = 0;
 
     // trajectory constants
-    public static final double TRACK_WIDTH = 0;
+    public static final double TRACK_WIDTH = Units.inchesToMeters(22);
     public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
         new DifferentialDriveKinematics(TRACK_WIDTH);
     public static final double MAX_SPEED = 3;
