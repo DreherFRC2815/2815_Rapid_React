@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -43,12 +46,6 @@ public final class Constants {
     public static final double r_kI = 0;
     public static final double r_kD = 0;
 
-    // limelight constants (inches, degrees)
-    public static final double targetHeight = 0;
-    public static final double limelightHeight = 0;
-    public static final double limelightAngleFromFloorParallel = 0;
-    public static final double limelightAngleFromFloorPerpendicular = 0;
-
     // trajectory constants
     public static final double TRACK_WIDTH = 0;
     public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
@@ -58,4 +55,22 @@ public final class Constants {
 
     public static final double ramseteB = 2;
     public static final double ramseteZeta = 0.7;
+
+    public static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT =
+    new DifferentialDriveVoltageConstraint(
+      new SimpleMotorFeedforward(
+        Constants.kS,
+        Constants.kV,
+        Constants.kA
+      ),
+      Constants.DRIVE_KINEMATICS,
+      10
+    );
+
+    public static final TrajectoryConfig CONFIG =
+    new TrajectoryConfig(
+      Constants.MAX_SPEED,
+      Constants.MAX_ACCELERATION
+    ).setKinematics(Constants.DRIVE_KINEMATICS)
+    .addConstraint(AUTO_VOLTAGE_CONSTRAINT);
 }

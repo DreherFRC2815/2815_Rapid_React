@@ -8,9 +8,19 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -30,7 +40,6 @@ public class DriveTrain extends SubsystemBase {
 
     DifferentialDrive drive;
 
-    ADXRS450_Gyro gyro;
     SimpleMotorFeedforward feedforward;
     PIDController gyroController;
     
@@ -45,6 +54,24 @@ public class DriveTrain extends SubsystemBase {
     double kI;
     double kD;
 
+    DifferentialDrivetrainSim driveSim = DifferentialDrivetrainSim.createKitbotSim(
+        KitbotMotor.kDoubleNEOPerSide,
+        KitbotGearing.k10p71,
+        KitbotWheelSize.kSixInch,
+        null
+    );
+
+    Gyro gyro;
+
+    DifferentialDriveOdometry odometry;
+
+    RamseteCommand ramseteCommand;
+
+    double leftPosition;
+    double rightPosition;
+
+    Field2d field = new Field2d();
+    
     public DriveTrain() {
         leftLeader = new CANSparkMax(1, MotorType.kBrushless);
         rightLeader = new CANSparkMax(3, MotorType.kBrushless);
@@ -236,5 +263,61 @@ public class DriveTrain extends SubsystemBase {
 
     public void setRotationalPID(double kP, double kI, double kD) {
         gyroController.setPID(kP, kI, kD);
+    }
+
+    public void periodic() {
+        leftPosition = leftEncoder.getPosition() * (Constants.GEAR_BOX_RATIO / Constants.WHEEL_CIRCUMFERENCE) * Constants.ELLIOT_COEFFICIENT;
+        rightPosition = rightEncoder.getPosition() * (Constants.GEAR_BOX_RATIO / Constants.WHEEL_CIRCUMFERENCE) * Constants.ELLIOT_COEFFICIENT;
+        odometry.update(gyro.getRotation2d(), leftPosition, rightPosition);
+    }
+
+    public Pose2d getPose() {
+        return odometry.getPoseMeters();
+    }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
+    }
+
+    public void resetOdometry(Pose2d pose) {
+        resetEncoders();
+        odometry.resetPosition(pose, gyro.getRotation2d());
+    }
+
+    public void arcadeDrive(double f, double t) {
+        drive.arcadeDrive(f, t);
+    }
+
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
+        leftLeader.setVoltage(leftVolts);
+        rightLeader.setVoltage(rightVolts);
+    }
+
+    public double getAverageEncoderDistance() {
+        return (leftEncoder.getPosition() + rightEncoder.getPosition() / 2.0);
+    }
+
+    public RelativeEncoder getLeftEncoder() {
+        return leftEncoder;
+    }
+
+    public RelativeEncoder getRightEncoder() {
+        return rightEncoder;
+    }
+
+    public void setMaxOutput(double maxOutput) {
+        drive.setMaxOutput(maxOutput);
+    }
+
+    public void zeroHeading() {
+        gyro.reset();
+    }
+
+    public double getHeading() {
+        return gyro.getRotation2d().getDegrees();
+    }
+
+    public double getTurnRate() {
+        return -gyro.getRate();
     }
 }
